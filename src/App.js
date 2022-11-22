@@ -1,39 +1,59 @@
 import React from 'react';
 import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
   Navigate,
+  Outlet,
+  createBrowserRouter,
+  RouterProvider,
 } from 'react-router-dom';
 import { StyledEngineProvider, ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 
 import theme from './theme';
 import Navbar from './components/Navbar';
+import Breadcrumbs from './components/Breadcrumbs';
 import Footer from './components/Footer';
 // import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import DashboardDetails from './pages/DashboardDetails';
+
+const DefaultLayout = () => (
+  <>
+    <Navbar />
+    <Breadcrumbs />
+    <Outlet />
+    <Footer />
+  </>
+);
+
+export const routes = [
+  {
+    element: <DefaultLayout />,
+    children: [
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        element: <Dashboard />,
+      },
+      {
+        path: '/dashboard/:id',
+        element: <DashboardDetails />,
+      },
+    ],
+  },
+  {
+    path: '/',
+    element: <Navigate to="/dashboard" replace />,
+  },
+];
+
+const router = createBrowserRouter(routes);
 
 export default function App() {
   return (
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Router>
-          <Navbar />
-          <Routes>
-            <Route
-              exact
-              path="/"
-              // element={<Home />}
-              element={<Navigate replace to="/dashboard" />}
-            />
-            <Route exact path="/dashboard" element={<Dashboard />} />
-            <Route exact path="/dashboard/:id" element={<DashboardDetails />} />
-          </Routes>
-          <Footer />
-        </Router>
+        <RouterProvider router={router} />
       </ThemeProvider>
     </StyledEngineProvider>
   );

@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
-
 // import LogoSvg from '../assets/logo.svg';
 
 export default function Navbar() {
@@ -16,5 +15,5 @@ export default function Navbar() {
 }
 
 const Root = styled('header')(({ theme }) => ({
-  padding: `${theme.spacing(4)} 0`,
+  paddingTop: theme.spacing(4),
 }));

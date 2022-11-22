@@ -2,7 +2,6 @@ import React from 'react';
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
-import Typography from '@mui/material/Typography';
 import { useParams } from 'react-router-dom';
 import {
   LineChart,
@@ -19,8 +18,8 @@ import data from '../data.json';
 
 export default function DashboardDetails() {
   const params = useParams();
-  const item = data.find((d) => d.id == params.id);
-  console.log('item', item);
+  const item = data.find((d) => d.id === params.id);
+  // console.log('item', item);
 
   const chartData = [
     {
@@ -61,19 +60,9 @@ export default function DashboardDetails() {
   return (
     <Root>
       <Container>
-        <Typography>{params.id}</Typography>
-
-        <Box height={450} mt={8}>
+        <Box height={450}>
           <ResponsiveContainer width="100%" height="100%">
-            <LineChart
-              data={chartData}
-              margin={{
-                top: 5,
-                left: 0,
-                right: 0,
-                bottom: 5,
-              }}
-            >
+            <LineChart data={chartData}>
               <CartesianGrid strokeDasharray="3 3" />
               <XAxis dataKey="name" />
               <YAxis />
@@ -89,8 +78,8 @@ export default function DashboardDetails() {
               <Line type="monotone" dataKey="s2market" stroke="#ffc658" />
               <Line type="monotone" dataKey="s3" stroke="#FF8042" />
               <Line type="monotone" dataKey="s12location" stroke="#0088FE" />
-              <Line type="monotone" dataKey="s12market" stroke="#8dd1e1" />
-              <Line type="monotone" dataKey="totalLocation" stroke="#a4de6c" />
+              <Line type="monotone" dataKey="s12market" stroke="#a4de6c" />
+              <Line type="monotone" dataKey="totalLocation" stroke="#8dd1e1" />
               <Line type="monotone" dataKey="totalMarket" stroke="#d0ed57" />
             </LineChart>
           </ResponsiveContainer>
