@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import Container from '@mui/material/Container';
@@ -14,7 +14,21 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 
+import ColumnVisibility from '../components/ColumnVisibility';
+import { columns } from './Dashboard';
 import data from '../data.json';
+
+const colors = [
+  '#82ca9d',
+  '#FF8042',
+  '#FFC658',
+  '#a4de6c',
+  '#44a8ff',
+  '#a583f3',
+  '#ED6D87',
+  '#d0ed57',
+  '#8dd1e1',
+];
 
 export default function DashboardDetails() {
   const params = useParams();
@@ -24,65 +38,127 @@ export default function DashboardDetails() {
   const chartData = [
     {
       name: '2020',
-      s1: item.fp2020scope1,
-      s2location: item.fp2020scope2location,
-      s2market: item.fp2020scope2market,
-      s3: item.fp2020scope3,
-      s12location: item.fp2020scope12location,
-      s12market: item.fp2020scope12market,
-      totalLocation: item.fp2020total,
-      totalMarket: item.fp2020offset,
+      scope1: item.fp2020scope1,
+      scope2location: item.fp2020scope2location,
+      scope2market: item.fp2020scope2market,
+      scope3: item.fp2020scope3,
+      scope12location: item.fp2020scope12location,
+      scope12market: item.fp2020scope12market,
+      totallocation: item.fp2020totallocation,
+      totalmarket: item.fp2020totalmarket,
+      offset: item.fp2020offset,
     },
     {
       name: '2021',
-      s1: item.fp2021scope1,
-      s2location: item.fp2021scope2location,
-      s2market: item.fp2021scope2market,
-      s3: item.fp2021scope3,
-      s12location: item.fp2021scope12location,
-      s12market: item.fp2021scope12market,
-      totalLocation: item.fp2021total,
-      totalMarket: item.fp2021offset,
+      scope1: item.fp2021scope1,
+      scope2location: item.fp2021scope2location,
+      scope2market: item.fp2021scope2market,
+      scope3: item.fp2021scope3,
+      scope12location: item.fp2021scope12location,
+      scope12market: item.fp2021scope12market,
+      totallocation: item.fp2021totallocation,
+      totalmarket: item.fp2021totalmarket,
+      offset: item.fp2021offset,
     },
     {
       name: '2022',
-      s1: item.fp2022scope1,
-      s2location: item.fp2022scope2location,
-      s2market: item.fp2022scope2market,
-      s3: item.fp2022scope3,
-      s12location: item.fp2022scope12location,
-      s12market: item.fp2022scope12market,
-      totalLocation: item.fp2022total,
-      totalMarket: item.fp2022offset,
+      scope1: item.fp2022scope1,
+      scope2location: item.fp2022scope2location,
+      scope2market: item.fp2022scope2market,
+      scope3: item.fp2022scope3,
+      scope12location: item.fp2022scope12location,
+      scope12market: item.fp2022scope12market,
+      totallocation: item.fp2022totallocation,
+      totalmarket: item.fp2022totalmarket,
+      offset: item.fp2022offset,
     },
   ];
 
+  const lines = [
+    {
+      dataKey: 'scope1',
+      name: 'S1',
+    },
+    {
+      dataKey: 'scope2location',
+      name: 'S2 Location',
+    },
+    {
+      dataKey: 'scope2market',
+      name: 'S2 Market',
+    },
+    {
+      dataKey: 'scope3',
+      name: 'S3',
+    },
+    {
+      dataKey: 'scope12location',
+      name: 'S1&2 Location',
+    },
+    {
+      dataKey: 'scope12market',
+      name: 'S1&2 Market',
+    },
+    {
+      dataKey: 'totallocation',
+      name: 'Total Location',
+    },
+    {
+      dataKey: 'totalmarket',
+      name: 'Total Market',
+    },
+    {
+      dataKey: 'offset',
+      name: 'Offset',
+    },
+  ];
+
+  const [columnVisibilityModel, setColumnVisibilityModel] = useState(
+    columns.reduce(
+      (acc, curr) => ({
+        ...acc,
+        [curr.field]: true,
+      }),
+      {}
+    )
+  );
+
+  const onColumnVisibilityChange = useCallback((state) => {
+    setColumnVisibilityModel(state);
+  }, []);
+
   return (
     <Root>
-      <Container>
-        <Box height={450}>
-          <ResponsiveContainer width="100%" height="100%">
-            <LineChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Legend />
-              <Line
-                type="monotone"
-                dataKey="s1"
-                stroke="#8884d8"
-                // activeDot={{ r: 8 }}
-              />
-              <Line type="monotone" dataKey="s2location" stroke="#82ca9d" />
-              <Line type="monotone" dataKey="s2market" stroke="#ffc658" />
-              <Line type="monotone" dataKey="s3" stroke="#FF8042" />
-              <Line type="monotone" dataKey="s12location" stroke="#0088FE" />
-              <Line type="monotone" dataKey="s12market" stroke="#a4de6c" />
-              <Line type="monotone" dataKey="totalLocation" stroke="#8dd1e1" />
-              <Line type="monotone" dataKey="totalMarket" stroke="#d0ed57" />
-            </LineChart>
-          </ResponsiveContainer>
+      <Container maxWidth={false}>
+        <Box display="flex">
+          <Box width={240}>
+            <ColumnVisibility onChange={onColumnVisibilityChange} />
+          </Box>
+          <Box display="flex" flex={1} height={450}>
+            <ResponsiveContainer width="100%" height="100%">
+              <LineChart data={chartData}>
+                <CartesianGrid strokeDasharray="2 2" />
+                <XAxis dataKey="name" />
+                <YAxis />
+                <Tooltip />
+                <Legend />
+                {lines.map(
+                  (lineProps, index) =>
+                    columnVisibilityModel[lineProps.dataKey] && (
+                      <Line
+                        key={index}
+                        type="monotone"
+                        stroke={colors[index]}
+                        strokeWidth={3}
+                        dot={false}
+                        activeDot={{ r: 6, stroke: '#121212', strokeWidth: 2 }}
+                        {...lineProps}
+                      />
+                    )
+                )}
+              </LineChart>
+            </ResponsiveContainer>
+          </Box>
         </Box>
       </Container>
     </Root>

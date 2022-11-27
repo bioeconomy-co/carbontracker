@@ -5,11 +5,22 @@ import MuiBreadcrumbs from '@mui/material/Breadcrumbs';
 import Link from '@mui/material/Link';
 import useBreadcrumbs from 'use-react-router-breadcrumbs';
 
+import data from '../data.json';
+
 export default function Breadcrumbs() {
-  const breadcrumbs = useBreadcrumbs();
+  const companies = groupById(data);
+
+  const breadcrumbs = useBreadcrumbs([
+    {
+      path: '/dashboard/:id',
+      breadcrumb: ({ match }) => {
+        return companies[match.params.id].company;
+      },
+    },
+  ]);
 
   return (
-    <Container>
+    <Container maxWidth={false}>
       <MuiBreadcrumbs mb={4}>
         {breadcrumbs.map(({ breadcrumb, match }, index) =>
           index < breadcrumbs.length - 1 ? (
@@ -30,4 +41,11 @@ export default function Breadcrumbs() {
       </MuiBreadcrumbs>
     </Container>
   );
+}
+
+function groupById(array) {
+  return array.reduce((obj, value) => {
+    obj[value.id] = value;
+    return obj;
+  }, {});
 }

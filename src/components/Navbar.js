@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 export default function Navbar() {
   return (
     <Root>
-      <Container>
+      <Container maxWidth={false}>
         <Typography variant="h1">Carbon Tracker</Typography>
       </Container>
     </Root>

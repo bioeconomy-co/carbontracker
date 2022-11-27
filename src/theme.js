@@ -5,9 +5,9 @@ export const baseFontFamily = "'Roboto', sans-serif";
 const theme = createTheme({
   palette: {
     mode: 'dark',
-    primary: {
-      main: '#FFF',
-    },
+    // primary: {
+    //   main: '#FFF',
+    // },
   },
   typography: {
     fontFamily: baseFontFamily,
