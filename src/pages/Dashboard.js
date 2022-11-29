@@ -12,8 +12,7 @@ export const columns = [
   {
     field: 'company',
     headerName: 'Company',
-    minWidth: 120,
-    // renderCell: (params) => <Box fontWeight={500}>{params.value}</Box>,
+    minWidth: 200,
   },
   {
     field: 'ceo',
@@ -23,6 +22,7 @@ export const columns = [
   {
     field: 'fp2022scope1',
     headerName: 'Scope 1',
+    type: 'number',
   },
   {
     field: 'fp2022scope2location',
@@ -33,6 +33,7 @@ export const columns = [
         Location
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2022scope2market',
@@ -43,10 +44,12 @@ export const columns = [
         Market
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2022scope3',
     headerName: 'Scope 3',
+    type: 'number',
   },
   {
     field: 'fp2022scope12location',
@@ -57,6 +60,7 @@ export const columns = [
         Location
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2022scope12market',
@@ -67,6 +71,7 @@ export const columns = [
         Market
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2022totallocation',
@@ -78,6 +83,7 @@ export const columns = [
         Location
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2022totalmarket',
@@ -89,14 +95,17 @@ export const columns = [
         Market
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2022offset',
     headerName: 'Offset',
+    type: 'number',
   },
   {
     field: 'fp2021scope1',
     headerName: 'Scope 1',
+    type: 'number',
   },
   {
     field: 'fp2021scope2location',
@@ -107,6 +116,7 @@ export const columns = [
         Location
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2021scope2market',
@@ -117,10 +127,12 @@ export const columns = [
         Market
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2021scope3',
     headerName: 'Scope 3',
+    type: 'number',
   },
   {
     field: 'fp2021scope12location',
@@ -131,6 +143,7 @@ export const columns = [
         Location
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2021scope12market',
@@ -141,6 +154,7 @@ export const columns = [
         Market
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2021totallocation',
@@ -152,6 +166,7 @@ export const columns = [
         Location
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2021totalmarket',
@@ -163,14 +178,17 @@ export const columns = [
         Market
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2021offset',
     headerName: 'Offset',
+    type: 'number',
   },
   {
     field: 'fp2020scope1',
     headerName: 'Scope 1',
+    type: 'number',
   },
   {
     field: 'fp2020scope2location',
@@ -181,6 +199,7 @@ export const columns = [
         Location
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2020scope2market',
@@ -191,6 +210,7 @@ export const columns = [
         Market
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2020scope3',
@@ -205,6 +225,7 @@ export const columns = [
         Location
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2020scope12market',
@@ -215,6 +236,7 @@ export const columns = [
         Market
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2020totallocation',
@@ -226,6 +248,7 @@ export const columns = [
         Location
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2020totalmarket',
@@ -237,10 +260,12 @@ export const columns = [
         Market
       </HeaderTitle>
     ),
+    type: 'number',
   },
   {
     field: 'fp2020offset',
     headerName: 'Offset',
+    type: 'number',
   },
 ];
 
