@@ -362,7 +362,7 @@ export default function Dashboard() {
               }
               rows={data}
               rowHeight={60}
-              pageSize={10}
+              pageSize={100}
               autoHeight
               onRowClick={(params) => navigate(`/dashboard/${params.id}`)}
             />
