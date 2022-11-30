@@ -6,9 +6,12 @@ export const titleFontFamily = "'Bai Jamjuree', sans-serif";
 const theme = createTheme({
   palette: {
     mode: 'dark',
-    // primary: {
-    //   main: '#FFF',
-    // },
+    primary: {
+      main: '#50D19D',
+    },
+    background: {
+      default: '#333336',
+    },
   },
   typography: {
     fontFamily: baseFontFamily,
@@ -21,6 +24,9 @@ const theme = createTheme({
   components: {
     MuiCssBaseline: {
       styleOverrides: {
+        body: {
+          background: '#333336',
+        },
         svg: {
           maxWidth: '100%',
           maxHeight: '100%',
