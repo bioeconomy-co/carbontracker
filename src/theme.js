@@ -1,6 +1,7 @@
 import { createTheme } from '@mui/material/styles';
 
 export const baseFontFamily = "'Roboto', sans-serif";
+export const titleFontFamily = "'Bai Jamjuree', sans-serif";
 
 const theme = createTheme({
   palette: {
@@ -12,8 +13,9 @@ const theme = createTheme({
   typography: {
     fontFamily: baseFontFamily,
     h1: {
-      fontSize: '3rem',
+      fontSize: '2.5rem',
       fontWeight: 700,
+      fontFamily: titleFontFamily,
     },
   },
   components: {
