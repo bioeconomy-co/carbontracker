@@ -68,7 +68,8 @@ export default function ColumnVisibility({ onChange, onToggleDiffs }) {
 
   useEffect(() => {
     onChange(state);
-  }, [state, onChange]);
+    onToggleDiffs(showDiffs);
+  }, [state, onChange, showDiffs, onToggleDiffs]);
 
   const handleChange = useCallback(
     (event) => {

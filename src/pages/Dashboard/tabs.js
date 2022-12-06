@@ -16,7 +16,7 @@ const tabs = [
     data: calcDiffs(dataWef100),
   },
 ];
-console.log(tabs);
+// console.log(tabs);
 
 function calcDiffs(data) {
   return data.map((row) => {
