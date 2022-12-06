@@ -1,14 +1,59 @@
-import React, { useState, useCallback } from 'react';
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
-import Container from '@mui/material/Container';
-import { DataGrid } from '@mui/x-data-grid';
-import { useNavigate } from 'react-router-dom';
+import Stack from '@mui/material/Stack';
+// import Typography from '@mui/material/Typography';
 
-import ColumnVisibility from '../components/ColumnVisibility';
-import data from '../data.json';
+const HeaderTitle = styled(Box)({
+  fontWeight: 500,
+  lineHeight: 1,
+});
 
-export const columns = [
+// const diffFormatter = (params) => {
+//   // console.log('------', params);
+//   if (!params.value) {
+//     return '';
+//   }
+//   return params.value > 0 ? `+${params.value}` : `-${params.value}`;
+// };
+
+const numberFormatter = Intl.NumberFormat();
+
+// const renderDiffCell = ({ value, formattedValue }) => {
+//   // console.log('v', value, formattedValue);
+//   if (!formattedValue) {
+//     return null;
+//   }
+//   return (
+//     <Box color={value > 0 ? 'error.main' : 'success.main'}>
+//       {formattedValue > 0 ? `+${formattedValue}` : formattedValue}
+//     </Box>
+//   );
+// };
+
+const Difference = ({ value }) => {
+  if (!value) {
+    return null;
+  }
+  const formattedValue = numberFormatter.format(value);
+  // console.log(value, formattedValue);
+  return (
+    <Box color={value > 0 ? 'error.main' : 'success.main'}>
+      {value > 0 ? `+${formattedValue}` : formattedValue}
+    </Box>
+  );
+};
+
+const renderCell = ({ row, field, formattedValue, colDef, ...rest }) => {
+  // console.log('renderCell', { row, field, formattedValue, ...rest });
+  return (
+    <Stack alignItems="flex-end">
+      {formattedValue}
+      {colDef._showDiffs && <Difference value={row[`${field}_diff`]} />}
+    </Stack>
+  );
+};
+
+const columns = [
   {
     field: 'company',
     headerName: 'Company',
@@ -23,7 +68,16 @@ export const columns = [
     field: 'fp2022scope1',
     headerName: 'Scope 1',
     type: 'number',
+    renderCell,
   },
+  // {
+  //   field: 'fp2022scope1_diff',
+  //   headerName: 'S1 (diff)',
+  //   type: 'number',
+  //   hide: true,
+  //   // valueFormatter: diffFormatter,
+  //   renderCell: renderDiffCell,
+  // },
   {
     field: 'fp2022scope2location',
     headerName: `Scope 2 Location`,
@@ -34,6 +88,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2022scope2market',
@@ -45,11 +100,13 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2022scope3',
     headerName: 'Scope 3',
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2022scope12location',
@@ -61,6 +118,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2022scope12market',
@@ -72,6 +130,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2022totallocation',
@@ -84,6 +143,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2022totalmarket',
@@ -96,16 +156,19 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2022offset',
     headerName: 'Offset',
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2021scope1',
     headerName: 'Scope 1',
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2021scope2location',
@@ -117,6 +180,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2021scope2market',
@@ -128,11 +192,13 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2021scope3',
     headerName: 'Scope 3',
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2021scope12location',
@@ -144,6 +210,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2021scope12market',
@@ -155,6 +222,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2021totallocation',
@@ -167,6 +235,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2021totalmarket',
@@ -179,16 +248,19 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2021offset',
     headerName: 'Offset',
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2020scope1',
     headerName: 'Scope 1',
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2020scope2location',
@@ -200,6 +272,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2020scope2market',
@@ -211,10 +284,12 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2020scope3',
     headerName: 'Scope 3',
+    renderCell,
   },
   {
     field: 'fp2020scope12location',
@@ -226,6 +301,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2020scope12market',
@@ -237,6 +313,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2020totallocation',
@@ -249,6 +326,7 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2020totalmarket',
@@ -261,20 +339,22 @@ export const columns = [
       </HeaderTitle>
     ),
     type: 'number',
+    renderCell,
   },
   {
     field: 'fp2020offset',
     headerName: 'Offset',
     type: 'number',
+    renderCell,
   },
 ];
 
 const columnGroupingModel = [
   {
     groupId: '2022',
-    // headerAlign: 'center',
     children: [
       { field: 'fp2022scope1' },
+      { field: 'fp2022scope1_diff' },
       { field: 'fp2022scope2location' },
       { field: 'fp2022scope2market' },
       { field: 'fp2022scope3' },
@@ -315,78 +395,4 @@ const columnGroupingModel = [
   },
 ];
 
-export default function Dashboard() {
-  const navigate = useNavigate();
-  const [columnVisibilityModel, setColumnVisibilityModel] = useState(
-    columns.reduce(
-      (acc, curr) => ({
-        ...acc,
-        [curr.field]: true,
-      }),
-      {}
-    )
-  );
-
-  const onColumnVisibilityChange = useCallback(
-    (state) => {
-      setColumnVisibilityModel(
-        Object.entries(state).reduce(
-          (acc, [key, value]) => ({
-            ...acc,
-            [`fp2022${key}`]: value,
-            [`fp2021${key}`]: value,
-            [`fp2020${key}`]: value,
-          }),
-          {}
-        )
-      );
-    },
-    [setColumnVisibilityModel]
-  );
-
-  return (
-    <Root component="main">
-      <Container maxWidth={false}>
-        <Box display="flex">
-          <Box width={240}>
-            <ColumnVisibility onChange={onColumnVisibilityChange} />
-          </Box>
-          <Box display="flex" flex={1} height="100%">
-            <DataGrid
-              columns={columns}
-              experimentalFeatures={{ columnGrouping: true }}
-              columnGroupingModel={columnGroupingModel}
-              columnVisibilityModel={columnVisibilityModel}
-              onColumnVisibilityModelChange={(newModel) =>
-                setColumnVisibilityModel(newModel)
-              }
-              rows={data}
-              rowHeight={60}
-              pageSize={100}
-              autoHeight
-              onRowClick={(params) => navigate(`/dashboard/${params.id}`)}
-            />
-          </Box>
-        </Box>
-      </Container>
-    </Root>
-  );
-}
-
-const Root = styled(Box)(({ theme }) => ({
-  display: 'flex',
-  flex: 1,
-  padding: theme.spacing(0),
-  '.MuiDataGrid-row': {
-    cursor: 'pointer',
-  },
-  '.MuiDataGrid-root .MuiDataGrid-cell:focus, .MuiDataGrid-root .MuiDataGrid-columnHeader:focus':
-    {
-      outline: 'none',
-    },
-}));
-
-const HeaderTitle = styled(Box)({
-  fontWeight: 500,
-  lineHeight: 1,
-});
+export { columns, columnGroupingModel };

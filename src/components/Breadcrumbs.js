@@ -21,7 +21,7 @@ export default function Breadcrumbs() {
 
   return (
     <Container maxWidth={false}>
-      <MuiBreadcrumbs mb={4}>
+      <MuiBreadcrumbs>
         {breadcrumbs.map(({ breadcrumb, match }, index) =>
           index < breadcrumbs.length - 1 ? (
             <Link

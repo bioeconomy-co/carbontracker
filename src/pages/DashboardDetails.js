@@ -15,8 +15,8 @@ import {
 } from 'recharts';
 
 import ColumnVisibility from '../components/ColumnVisibility';
-import { columns } from './Dashboard';
-import data from '../data.json';
+import { columns } from './Dashboard/columns';
+import data from '../data.json'; // TODO: tabs with various data jsons
 
 const colors = [
   '#82ca9d',
@@ -130,8 +130,8 @@ export default function DashboardDetails() {
   return (
     <Root>
       <Container maxWidth={false}>
-        <Box display="flex">
-          <Box width={240}>
+        <Box display="flex" mt={6}>
+          <Box width={320}>
             <ColumnVisibility onChange={onColumnVisibilityChange} />
           </Box>
           <Box display="flex" flex={1} height={450}>

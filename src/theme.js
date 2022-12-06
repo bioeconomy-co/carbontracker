@@ -3,6 +3,10 @@ import { createTheme } from '@mui/material/styles';
 export const baseFontFamily = "'Roboto', sans-serif";
 export const titleFontFamily = "'Bai Jamjuree', sans-serif";
 
+const { palette } = createTheme();
+const { augmentColor } = palette;
+const createColor = (mainColor) => augmentColor({ color: { main: mainColor } });
+
 const theme = createTheme({
   palette: {
     mode: 'dark',
@@ -10,7 +14,8 @@ const theme = createTheme({
       main: '#50D19D',
     },
     background: {
-      default: '#333336',
+      // default: '#333336',
+      default: createColor('#333336'), // main, dark, light
     },
   },
   typography: {

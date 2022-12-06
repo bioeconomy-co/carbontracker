@@ -2,13 +2,19 @@ import React, { useEffect, useCallback } from 'react';
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
 import FormControlLabel from '@mui/material/FormControlLabel';
-import FormLabel from '@mui/material/FormLabel';
+// import FormLabel from '@mui/material/FormLabel';
 import FormControl from '@mui/material/FormControl';
 import FormGroup from '@mui/material/FormGroup';
 import Switch from '@mui/material/Switch';
 // import Divider from '@mui/material/Divider';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Accordion from '@mui/material/Accordion';
+import AccordionSummary from '@mui/material/AccordionSummary';
+import AccordionDetails from '@mui/material/AccordionDetails';
+// import AccordionActions from '@mui/material/AccordionActions';
+import Typography from '@mui/material/Typography';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import useLocalStorage from '../hooks/useLocalStorage';
 
@@ -56,8 +62,9 @@ const initialState = fieldMap.reduce(
   {}
 );
 
-export default function ColumnVisibility({ onChange }) {
+export default function ColumnVisibility({ onChange, onToggleDiffs }) {
   const [state, setState] = useLocalStorage('showColumns', initialState);
+  const [showDiffs, setShowDiffs] = useLocalStorage('showDiffs', false);
 
   useEffect(() => {
     onChange(state);
@@ -89,45 +96,88 @@ export default function ColumnVisibility({ onChange }) {
     [setState, onChange]
   );
 
+  const toggleDiffs = useCallback(
+    (event) => {
+      setShowDiffs(event.target.checked);
+      onToggleDiffs(event.target.checked);
+    },
+    [setShowDiffs, onToggleDiffs]
+  );
+
   return (
     <Root>
-      <FormControl component="fieldset" variant="standard">
-        <FormLabel component="legend" p={0}>
-          Show columns
-        </FormLabel>
-        <FormGroup>
-          {fieldMap.map(({ field, label }) => (
-            <FormControlLabel
-              key={field}
-              label={label}
-              control={
-                <Switch
-                  checked={state[field]}
-                  onChange={handleChange}
-                  name={field}
+      <Accordion
+        defaultExpanded
+        disableGutters
+        variant="outlined"
+        sx={{ bgcolor: 'background.default.dark' }}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Columns</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <FormControl component="fieldset" variant="standard">
+            {/* <FormLabel component="legend" p={0}>
+              Show columns
+            </FormLabel> */}
+            <FormGroup>
+              {fieldMap.map(({ field, label }) => (
+                <FormControlLabel
+                  key={field}
+                  label={label}
+                  control={
+                    <Switch
+                      checked={state[field]}
+                      onChange={handleChange}
+                      name={field}
+                    />
+                  }
                 />
-              }
-            />
-          ))}
-        </FormGroup>
-      </FormControl>
-      <Stack direction="row" spacing={2} my={2}>
-        <Button variant="outlined" size="small" onClick={() => toggleAll(true)}>
-          Show all
-        </Button>
-        <Button
-          variant="outlined"
-          size="small"
-          onClick={() => toggleAll(false)}
-        >
-          Hide all
-        </Button>
-      </Stack>
+              ))}
+            </FormGroup>
+          </FormControl>
+          <Stack direction="row" spacing={2} mt={1}>
+            <Button size="small" onClick={() => toggleAll(true)}>
+              Show all
+            </Button>
+            <Button size="small" onClick={() => toggleAll(false)}>
+              Hide all
+            </Button>
+          </Stack>
+        </AccordionDetails>
+      </Accordion>
+      <Accordion
+        defaultExpanded
+        disableGutters
+        variant="outlined"
+        sx={{ bgcolor: 'background.default.dark', borderTop: 'none' }}
+      >
+        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <Typography>Differences</Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <FormControl component="fieldset" variant="standard">
+            <FormGroup>
+              <FormControlLabel
+                label={'Show differences'}
+                control={
+                  <Switch
+                    checked={showDiffs}
+                    onChange={toggleDiffs}
+                    name={'showDiffs'}
+                  />
+                }
+              />
+            </FormGroup>
+          </FormControl>
+        </AccordionDetails>
+      </Accordion>
     </Root>
   );
 }
 
 const Root = styled(Box)(({ theme }) => ({
+  marginRight: theme.spacing(4),
   '.MuiFormLabel-root.Mui-focused': {
     color: theme.palette.text.secondary,
   },

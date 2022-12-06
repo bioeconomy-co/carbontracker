@@ -15,6 +15,7 @@ import Footer from './components/Footer';
 // import Home from './pages/Home';
 import Dashboard from './pages/Dashboard';
 import DashboardDetails from './pages/DashboardDetails';
+// console.log(theme);
 
 const DefaultLayout = () => (
   <>
