@@ -14,8 +14,8 @@ const theme = createTheme({
       main: '#50D19D',
     },
     background: {
-      // default: '#333336',
-      default: createColor('#333336'), // main, dark, light
+      default: '#333336',
+      surface: createColor('#333336'), // main, dark, light
     },
   },
   typography: {

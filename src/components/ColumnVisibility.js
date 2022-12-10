@@ -18,7 +18,7 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import useLocalStorage from '../hooks/useLocalStorage';
 
-const fieldMap = [
+export const fieldMap = [
   {
     field: 'scope1',
     label: 'Scope 1',
@@ -62,14 +62,21 @@ const initialState = fieldMap.reduce(
   {}
 );
 
-export default function ColumnVisibility({ onChange, onToggleDiffs }) {
+export default function ColumnVisibility({
+  onChange,
+  onToggleDiffs,
+  onToggleTrends,
+}) {
   const [state, setState] = useLocalStorage('showColumns', initialState);
   const [showDiffs, setShowDiffs] = useLocalStorage('showDiffs', false);
+  const [showTrends, setShowTrends] = useLocalStorage('showTrends', true);
 
   useEffect(() => {
-    onChange(state);
-    onToggleDiffs(showDiffs);
-  }, [state, onChange, showDiffs, onToggleDiffs]);
+    onChange?.(state);
+    onToggleDiffs?.(showDiffs, state);
+    onToggleTrends?.(showTrends);
+    // eslint-disable-next-line
+  }, []);
 
   const handleChange = useCallback(
     (event) => {
@@ -78,7 +85,7 @@ export default function ColumnVisibility({ onChange, onToggleDiffs }) {
         [event.target.name]: event.target.checked,
       };
       setState(newState);
-      onChange(newState);
+      onChange?.(newState);
     },
     [state, setState, onChange]
   );
@@ -92,7 +99,7 @@ export default function ColumnVisibility({ onChange, onToggleDiffs }) {
         ),
       };
       setState(newState);
-      onChange(newState);
+      onChange?.(newState);
     },
     [setState, onChange]
   );
@@ -100,9 +107,17 @@ export default function ColumnVisibility({ onChange, onToggleDiffs }) {
   const toggleDiffs = useCallback(
     (event) => {
       setShowDiffs(event.target.checked);
-      onToggleDiffs(event.target.checked);
+      onToggleDiffs?.(event.target.checked, state);
     },
-    [setShowDiffs, onToggleDiffs]
+    [setShowDiffs, onToggleDiffs, state]
+  );
+
+  const toggleTrends = useCallback(
+    (event) => {
+      setShowTrends(event.target.checked);
+      onToggleTrends?.(event.target.checked);
+    },
+    [setShowTrends, onToggleTrends]
   );
 
   return (
@@ -111,7 +126,7 @@ export default function ColumnVisibility({ onChange, onToggleDiffs }) {
         defaultExpanded
         disableGutters
         variant="outlined"
-        sx={{ bgcolor: 'background.default.dark' }}
+        sx={{ bgcolor: 'background.surface.dark' }}
       >
         <AccordionSummary expandIcon={<ExpandMoreIcon />}>
           <Typography>Columns</Typography>
@@ -147,32 +162,47 @@ export default function ColumnVisibility({ onChange, onToggleDiffs }) {
           </Stack>
         </AccordionDetails>
       </Accordion>
-      <Accordion
-        defaultExpanded
-        disableGutters
-        variant="outlined"
-        sx={{ bgcolor: 'background.default.dark', borderTop: 'none' }}
-      >
-        <AccordionSummary expandIcon={<ExpandMoreIcon />}>
-          <Typography>Differences</Typography>
-        </AccordionSummary>
-        <AccordionDetails>
-          <FormControl component="fieldset" variant="standard">
-            <FormGroup>
-              <FormControlLabel
-                label={'Show differences'}
-                control={
-                  <Switch
-                    checked={showDiffs}
-                    onChange={toggleDiffs}
-                    name={'showDiffs'}
-                  />
-                }
-              />
-            </FormGroup>
-          </FormControl>
-        </AccordionDetails>
-      </Accordion>
+      {onToggleDiffs && (
+        <Accordion
+          defaultExpanded
+          disableGutters
+          variant="outlined"
+          sx={{
+            bgcolor: 'background.surface.dark',
+            borderTop: 'none',
+          }}
+        >
+          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <Typography>Differences</Typography>
+          </AccordionSummary>
+          <AccordionDetails>
+            <FormControl component="fieldset" variant="standard">
+              <FormGroup>
+                <FormControlLabel
+                  label={'Show differences'}
+                  control={
+                    <Switch
+                      checked={showDiffs}
+                      onChange={toggleDiffs}
+                      name={'showDiffs'}
+                    />
+                  }
+                />
+                <FormControlLabel
+                  label={'Show trends'}
+                  control={
+                    <Switch
+                      checked={showTrends}
+                      onChange={toggleTrends}
+                      name={'showTrends'}
+                    />
+                  }
+                />
+              </FormGroup>
+            </FormControl>
+          </AccordionDetails>
+        </Accordion>
+      )}
     </Root>
   );
 }

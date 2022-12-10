@@ -11,13 +11,21 @@ import { useNavigate } from 'react-router-dom';
 import ColumnVisibility from '../../components/ColumnVisibility';
 
 import { tabs } from './tabs';
-import { columns, columnGroupingModel } from './columns';
+import {
+  createColumnsWithDiffs,
+  createColumnGroupModelWithDiffs,
+} from './columns';
+
+const columns = createColumnsWithDiffs();
+console.log('columns', columns);
+const columnGroupingModel = createColumnGroupModelWithDiffs();
+console.log('columnGroupingModel', columnGroupingModel);
 
 export default function Dashboard() {
   const navigate = useNavigate();
   const [tab, setTab] = useState(0);
   const [rows, setRows] = useState(tabs[tab].data);
-  const [showDiffs, setShowDiffs] = useState(false);
+  const [showTrends, setShowTrends] = useState(true);
 
   const onChangeTab = (event, newValue) => {
     setTab(newValue);
@@ -51,7 +59,40 @@ export default function Dashboard() {
     [setColumnVisibilityModel]
   );
 
-  // const onToggleDiffs = (value) =>setShowDiffs()
+  const onToggleDiffs = useCallback(
+    (checked, state) => {
+      setColumnVisibilityModel(
+        Object.keys(state).reduce(
+          (acc, key) => ({
+            ...acc,
+            [`fp2022${key}_diff`]: checked,
+            [`fp2021${key}_diff`]: checked,
+            [`fp2020${key}_diff`]: checked,
+          }),
+          {}
+        )
+      );
+    },
+    [setColumnVisibilityModel]
+  );
+
+  const onToggleTrends = useCallback(
+    (checked) => {
+      setShowTrends(checked);
+      // setColumnVisibilityModel(
+      //   Object.keys(state).reduce(
+      //     (acc, key) => ({
+      //       ...acc,
+      //       [`fp2022${key}_diff`]: checked,
+      //       [`fp2021${key}_diff`]: checked,
+      //       [`fp2020${key}_diff`]: checked,
+      //     }),
+      //     {}
+      //   )
+      // );
+    },
+    [setShowTrends]
+  );
 
   return (
     <Root component="main">
@@ -69,41 +110,18 @@ export default function Dashboard() {
           <Box width={320} mt={6} overflow="auto">
             <ColumnVisibility
               onChange={onColumnVisibilityChange}
-              onToggleDiffs={setShowDiffs}
+              onToggleDiffs={onToggleDiffs}
+              onToggleTrends={onToggleTrends}
             />
           </Box>
-          <Box
-            display="flex"
-            flexDirection="column"
-            flex={1}
-            mb={4}
-            // sx={{
-            //   position: 'fixed',
-            //   // top: 0,
-            //   bottom: 0,
-            //   right: 0,
-            // }}
-          >
-            <Tabs
-              value={tab}
-              onChange={onChangeTab}
-              variant="scrollable"
-              sx={
-                {
-                  // marginTop: -8,
-                  // marginBottom: 2,
-                  // '.MuiTabs-flexContainer': {
-                  //   justifyContent: 'flex-end',
-                  // },
-                }
-              }
-            >
+          <Box display="flex" flexDirection="column" flex={1} mb={4}>
+            <Tabs value={tab} onChange={onChangeTab} variant="scrollable">
               {tabs.map((t, i) => (
                 <Tab key={i} value={i} label={t.name} />
               ))}
             </Tabs>
             <DataGrid
-              columns={columns.map((c) => ({ ...c, _showDiffs: showDiffs }))}
+              columns={columns.map((c) => ({ ...c, _showTrends: showTrends }))}
               disableColumnMenu={true}
               experimentalFeatures={{ columnGrouping: true }}
               columnGroupingModel={columnGroupingModel}
@@ -113,9 +131,9 @@ export default function Dashboard() {
               }
               rows={rows}
               rowHeight={60}
+              onRowClick={(params) => navigate(`/dashboard/${params.id}`)}
               pageSize={100}
               // autoPageSize
-              onRowClick={(params) => navigate(`/dashboard/${params.id}`)}
             />
           </Box>
         </Box>

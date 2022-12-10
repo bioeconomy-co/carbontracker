@@ -1,41 +1,59 @@
+import React from 'react';
 import styled from '@emotion/styled';
 import Box from '@mui/material/Box';
-import Stack from '@mui/material/Stack';
+// import Stack from '@mui/material/Stack';
 // import Typography from '@mui/material/Typography';
 
-const HeaderTitle = styled(Box)({
-  fontWeight: 500,
-  lineHeight: 1,
-});
+import SparklineTooltip from './SparklineTooltip';
+import { fieldMap } from '../../components/ColumnVisibility';
 
-// const diffFormatter = (params) => {
-//   // console.log('------', params);
-//   if (!params.value) {
-//     return '';
-//   }
-//   return params.value > 0 ? `+${params.value}` : `-${params.value}`;
-// };
-
+const years = ['2022', '2021', '2020'];
 const numberFormatter = Intl.NumberFormat();
 
-// const renderDiffCell = ({ value, formattedValue }) => {
-//   // console.log('v', value, formattedValue);
-//   if (!formattedValue) {
-//     return null;
-//   }
-//   return (
-//     <Box color={value > 0 ? 'error.main' : 'success.main'}>
-//       {formattedValue > 0 ? `+${formattedValue}` : formattedValue}
-//     </Box>
-//   );
-// };
+function renderCell(params) {
+  return <GridCell {...params} />;
+}
+
+const GridCell = (props) => {
+  const { row, field, formattedValue, colDef } = props;
+  return (
+    <SparklineTooltip
+      row={row}
+      field={field}
+      colDef={colDef}
+      enabled={colDef._showTrends}
+    >
+      <Box display="flex" flexDirection="column" alignItems="flex-end">
+        {formattedValue}
+        {/* {colDef._showDiffs && <Difference value={row[`${field}_diff`]} />} */}
+      </Box>
+    </SparklineTooltip>
+  );
+};
+
+const renderDiffCell = ({ row, field, value, colDef }) => {
+  if (!value) {
+    return null;
+  }
+  return (
+    <SparklineTooltip
+      row={row}
+      field={field.slice(0, -5)}
+      colDef={colDef}
+      enabled={colDef._showTrends}
+    >
+      <Box>
+        <Difference value={value} />
+      </Box>
+    </SparklineTooltip>
+  );
+};
 
 const Difference = ({ value }) => {
   if (!value) {
     return null;
   }
   const formattedValue = numberFormatter.format(value);
-  // console.log(value, formattedValue);
   return (
     <Box color={value > 0 ? 'error.main' : 'success.main'}>
       {value > 0 ? `+${formattedValue}` : formattedValue}
@@ -43,15 +61,11 @@ const Difference = ({ value }) => {
   );
 };
 
-const renderCell = ({ row, field, formattedValue, colDef, ...rest }) => {
-  // console.log('renderCell', { row, field, formattedValue, ...rest });
-  return (
-    <Stack alignItems="flex-end">
-      {formattedValue}
-      {colDef._showDiffs && <Difference value={row[`${field}_diff`]} />}
-    </Stack>
-  );
-};
+const HeaderTitle = styled(Box)({
+  fontWeight: 500,
+  lineHeight: 1,
+  textAlign: 'right',
+});
 
 const columns = [
   {
@@ -72,10 +86,7 @@ const columns = [
   },
   // {
   //   field: 'fp2022scope1_diff',
-  //   headerName: 'S1 (diff)',
-  //   type: 'number',
-  //   hide: true,
-  //   // valueFormatter: diffFormatter,
+  //   headerName: 'vs. 2021',
   //   renderCell: renderDiffCell,
   // },
   {
@@ -289,6 +300,7 @@ const columns = [
   {
     field: 'fp2020scope3',
     headerName: 'Scope 3',
+    type: 'number',
     renderCell,
   },
   {
@@ -349,12 +361,29 @@ const columns = [
   },
 ];
 
+function createColumnsWithDiffs() {
+  return columns.reduce((acc, col) => {
+    const currYear = +col.field.substring(2, 6);
+    if (!col.field.startsWith('fp') || currYear === 2020) {
+      return [...acc, col];
+    }
+    return [
+      ...acc,
+      col,
+      {
+        field: `${col.field}_diff`,
+        headerName: `vs. ${currYear - 1}`,
+        renderCell: renderDiffCell,
+      },
+    ];
+  }, []);
+}
+
 const columnGroupingModel = [
   {
     groupId: '2022',
     children: [
       { field: 'fp2022scope1' },
-      { field: 'fp2022scope1_diff' },
       { field: 'fp2022scope2location' },
       { field: 'fp2022scope2market' },
       { field: 'fp2022scope3' },
@@ -395,4 +424,20 @@ const columnGroupingModel = [
   },
 ];
 
-export { columns, columnGroupingModel };
+function createColumnGroupModelWithDiffs() {
+  return years.map((year) => ({
+    groupId: year,
+    children: fieldMap.reduce((acc, f) => {
+      acc.push({ field: `fp${year}${f.field}` });
+      acc.push({ field: `fp${year}${f.field}_diff` });
+      return acc;
+    }, []),
+  }));
+}
+
+export {
+  columns,
+  createColumnsWithDiffs,
+  columnGroupingModel,
+  createColumnGroupModelWithDiffs,
+};
